@@ -18,23 +18,21 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import Link from "next/link";
-
-const formSchema = z.object({
-  email: z.string().email("El correo ingresado es invalido"),
-  password: z.string().min(8, "Minimo tienen que ser 8 caracteres"),
-});
+import { loginSchema } from "../schemas";
+import { useLogin } from "../api/use-login";
 
 export const SignInCard = () => {
-  const form = useForm<z.infer<typeof formSchema>>({
-    resolver: zodResolver(formSchema),
+  const { mutate } = useLogin();
+  const form = useForm<z.infer<typeof loginSchema>>({
+    resolver: zodResolver(loginSchema),
     defaultValues: {
       email: "",
       password: "",
     },
   });
 
-  const handlerSubmit = (e: z.infer<typeof formSchema>) => {
-    console.log(e);
+  const handlerSubmit = (values: z.infer<typeof loginSchema>) => {
+    mutate(values);
   };
   return (
     <Card className="w-full h-full md:w-[487px] border-nene shadow-none">
